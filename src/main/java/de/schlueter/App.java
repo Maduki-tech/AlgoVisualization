@@ -57,11 +57,9 @@ public class App extends Application {
     }
 
     protected boolean BubbleSortStep() {
-        boolean swapped = false;
         if (bubbleSortIndex < rects.size() - 1) {
             if (rects.get(bubbleSortIndex).getValue() > rects.get(bubbleSortIndex + 1).getValue()) {
                 swap(rects, bubbleSortIndex, bubbleSortIndex + 1);
-                swapped = true;
             }
             bubbleSortIndex++;
         } else {
