@@ -32,11 +32,12 @@ public class Rect{
         this.randomYPositions = (int) (gc.getCanvas().getHeight() - height);
     }
 
-    // public int getPosition(){
-    //
-    // }
-    //
-    // public void setPosition(int position){
-    //
-    // }
+    public void setX(int x){
+        this.indexNumber = x;
+    }
+
+    public int getValue(){
+        return (int)gc.getCanvas().getHeight() - randomYPositions;
+    }
+
 }
