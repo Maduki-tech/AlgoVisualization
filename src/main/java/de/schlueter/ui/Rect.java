@@ -1,12 +1,11 @@
 package de.schlueter.ui;
 
 import javafx.scene.canvas.GraphicsContext;
-import javafx.scene.shape.Rectangle;
 
 /**
  * Rect
  */
-public class Rect extends Rectangle {
+public class Rect{
     GraphicsContext gc;
     private int gap = 10;
     private int widthRect = 50;
@@ -24,4 +23,20 @@ public class Rect extends Rectangle {
         gc.fillRect(gap * indexNumber + 1 + widthRect * indexNumber, startY, widthRect,
                     randomYPositions);
     }
+
+    public double getHeight(){
+        return gc.getCanvas().getHeight() - randomYPositions;
+    }
+
+    public void setHeight(double height){
+        this.randomYPositions = (int) (gc.getCanvas().getHeight() - height);
+    }
+
+    // public int getPosition(){
+    //
+    // }
+    //
+    // public void setPosition(int position){
+    //
+    // }
 }

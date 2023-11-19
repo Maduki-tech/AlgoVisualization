@@ -1,9 +1,9 @@
 package de.schlueter;
 
+import de.schlueter.algorithm.BubbleSort;
+import de.schlueter.ui.Rect;
 import java.util.ArrayList;
 import java.util.List;
-
-import de.schlueter.ui.Rect;
 import javafx.application.Application;
 import javafx.scene.Group;
 import javafx.scene.Scene;
@@ -55,5 +55,7 @@ public class App extends Application {
             rects.get(i).draw();
         }
 
+        BubbleSort.sort(rects);
     }
+
 }
