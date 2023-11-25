@@ -1,43 +1,33 @@
-package de.schlueter.ui;
+package de.schlueter.UI;
 
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.paint.Color;
 
 /**
  * Rect
  */
-public class Rect{
-    GraphicsContext gc;
-    private int gap = 10;
-    private int widthRect = 50;
-    private int indexNumber;
-    private int randomYPositions;
+public class Rect {
+    private int HEIGHT = 200;
+    private int widthRect = 20;
+    private int xOffset = 25;
+    private int randomHeight;
+    private int currentXOffset;
 
-    public Rect(GraphicsContext gc, int indexNumber, int randomYPositions) {
-        this.gc = gc;
-        this.indexNumber = indexNumber;
-        this.randomYPositions = randomYPositions;
+    public Rect() {
+        randomHeight = randomHeight(1, HEIGHT-10);
     }
 
-    public void draw() {
-        double startY = gc.getCanvas().getHeight() - randomYPositions;
-        gc.fillRect(gap * indexNumber + 1 + widthRect * indexNumber, startY, widthRect,
-                    randomYPositions);
+    private int randomHeight(int min, int max){
+        return (int) ((Math.random() * (max - min)) + min);
+    }
+    public void draw(GraphicsContext gc, int factor) {
+        gc.setFill(Color.BLACK);
+        this.currentXOffset = xOffset * factor;
+        gc.fillRect(this.currentXOffset, 0, this.widthRect, this.randomHeight);
     }
 
-    public double getHeight(){
-        return gc.getCanvas().getHeight() - randomYPositions;
-    }
-
-    public void setHeight(double height){
-        this.randomYPositions = (int) (gc.getCanvas().getHeight() - height);
-    }
-
-    public void setX(int x){
-        this.indexNumber = x;
-    }
-
-    public int getValue(){
-        return (int)gc.getCanvas().getHeight() - randomYPositions;
+    public int getHeight() {
+        return randomHeight;
     }
 
 }

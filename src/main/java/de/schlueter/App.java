@@ -1,93 +1,112 @@
 package de.schlueter;
 
-import de.schlueter.ui.Rect;
+import de.schlueter.Algo.BubbleSort;
+import de.schlueter.UI.Rect;
 import java.util.ArrayList;
 import java.util.List;
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
+import javafx.application.Platform;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.canvas.Canvas;
 import javafx.scene.canvas.GraphicsContext;
+import javafx.scene.control.Alert;
+import javafx.scene.control.ButtonType;
 import javafx.stage.Stage;
-/**
- * Hello world!
- *
- */
-public class App extends Application {
-    private static int WIDTH = 800;
-    private static int HEIGHT = 600;
-    private static int numberOfElements = 30;
-    List<Rect> rects = new ArrayList<>();
 
-    private int bubbleSortIndex = 0;
-    private boolean isSorted = false;
+public class App extends Application {
+    private static int WIDTH = 400;
+    private static int HEIGHT = 200;
+    private List<Rect> rects = new ArrayList<Rect>();
+    private boolean sorted = false;
+    int index = 0;
+    long lastUpdate = 0;
+    private static String[] launchargs;
+    private String algorithm;
 
     public static void main(String[] args) {
+        App.launchargs = args;
         launch(args);
     }
+
     @Override
     public void start(Stage primaryStage) {
+        if (launchargs.length > 0) {
+            try {
+                algorithm = launchargs[0];
+            } catch (Exception e) {
+                System.out.println("No algorithm specified");
+                System.exit(0);
+            }
+        }
+
         Group root = new Group();
         Scene scene = new Scene(root, WIDTH, HEIGHT);
         final Canvas canvas = new Canvas(WIDTH, HEIGHT);
+
         canvas.widthProperty().bind(scene.widthProperty());
         canvas.heightProperty().bind(scene.heightProperty());
 
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        root.getChildren().add(canvas);
-        initializeRects(gc);
+        for (int i = 0; i < 20; i++) {
+            rects.add(new Rect());
+            rects.get(i).draw(gc, i);
+        }
 
-        new AnimationTimer() {
+        AnimationTimer timer = new AnimationTimer() {
             @Override
             public void handle(long now) {
-                if (!isSorted) {
-                    isSorted = BubbleSortStep();
-                    draw(gc);
-                }else{
-                    System.out.println("Done!");
+                // every 3 seconds
+                if (sorted) {
                     stop();
+                    showAlert("sorted");
+                } else {
+                    if (algorithm.equals(Param.bubbleSort.toString())) {
+                        runBubbleSort();
+                    }
+                }
+                lastUpdate = now;
+                gc.clearRect(0, 0, WIDTH, HEIGHT); // Clear the canvas
+                for (int i = 0; i < rects.size(); i++) {
+                    rects.get(i).draw(gc, i); // Redraw each rectangle at its new position
                 }
             }
-        }.start();
+        };
+        timer.start();
+
+        root.getChildren().add(canvas);
 
         primaryStage.setTitle("BubbleSort");
         primaryStage.setScene(scene);
         primaryStage.show();
     }
 
-    protected boolean BubbleSortStep() {
-        if (bubbleSortIndex < rects.size() - 1) {
-            if (rects.get(bubbleSortIndex).getValue() > rects.get(bubbleSortIndex + 1).getValue()) {
-                swap(rects, bubbleSortIndex, bubbleSortIndex + 1);
+    private void runBubbleSort() {
+        rects = BubbleSort.sort(rects, index);
+        index++;
+        if (index == rects.size() - 1) {
+            index = 0;
+        }
+        for (int i = 0; i < rects.size() - 1; i++) {
+            if (rects.get(i).getHeight() > rects.get(i + 1).getHeight()) {
+                sorted = false;
+                break;
+            } else {
+                sorted = true;
             }
-            bubbleSortIndex++;
-        } else {
-            bubbleSortIndex = 0;
-        }
-        return false;
-    }
-
-    private void swap(List<Rect> rects, int firstIndex, int secondIndex) {
-        Rect temp = rects.get(firstIndex);
-        rects.set(firstIndex, rects.get(secondIndex));
-        rects.set(secondIndex, temp);
-
-        // Update positions
-        rects.get(firstIndex).setX(firstIndex);
-        rects.get(secondIndex).setX(secondIndex);
-    }
-    private void initializeRects(GraphicsContext gc) {
-        for (int i = 0; i < numberOfElements; i++) {
-            int randomYPositions = ((int)(Math.random() * 500 + 100));
-            rects.add(new Rect(gc, i, randomYPositions));
         }
     }
 
-    private void draw(GraphicsContext gc) {
-        gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
-        for (Rect rect : rects) {
-            rect.draw();
-        }
+    private void showAlert(String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle("Information Dialog");
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        Platform.runLater(() -> alert.showAndWait().ifPresent(rs -> {
+            if (rs == ButtonType.OK) {
+                System.exit(0);
+            }
+        }));
     }
 }
