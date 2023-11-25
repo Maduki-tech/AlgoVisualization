@@ -5,5 +5,6 @@ package de.schlueter;
  */
 public enum Param {
     bubbleSort,
+    selectionSort
 
 }

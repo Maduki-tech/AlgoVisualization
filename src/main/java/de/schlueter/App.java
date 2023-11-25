@@ -1,6 +1,7 @@
 package de.schlueter;
 
 import de.schlueter.Algo.BubbleSort;
+import de.schlueter.Algo.SelectionSort;
 import de.schlueter.UI.Rect;
 import java.util.ArrayList;
 import java.util.List;
@@ -65,6 +66,10 @@ public class App extends Application {
                     if (algorithm.equals(Param.bubbleSort.toString())) {
                         runBubbleSort();
                     }
+                    if(algorithm.equals(Param.selectionSort.toString())){
+                        runSelectionSort();
+                    }
+                    checkIfSorted();
                 }
                 lastUpdate = now;
                 gc.clearRect(0, 0, WIDTH, HEIGHT); // Clear the canvas
@@ -85,6 +90,14 @@ public class App extends Application {
     private void runBubbleSort() {
         rects = BubbleSort.sort(rects, index);
         index++;
+    }
+
+    private void runSelectionSort() {
+        rects = SelectionSort.sort(rects, index);
+        index++;
+    }
+
+    private void checkIfSorted() {
         if (index == rects.size() - 1) {
             index = 0;
         }
