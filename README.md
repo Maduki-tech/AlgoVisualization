@@ -4,7 +4,7 @@
 
 ## Algorithms
 - [x] Bubble Sort
-- [ ] Selection Sort
+- [x] Selection Sort
 - [ ] Merge Sort
 - [ ] Quick Sort
 - [ ] Heap Sort
